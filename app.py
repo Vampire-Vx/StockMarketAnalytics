@@ -1,0 +1,94 @@
+from typing import Dict
+import dash_bootstrap_components as dbc
+from dash import Dash, dcc, html, Input, Output
+import components as cmp
+from guide.layout import create_layout as create_guide_layout
+from market_dashboard.layout import create_layout as create_market_dashboard_layout
+from portfolio_dashboard.layout import create_layout as create_portfolio_dashboard_layout
+from portfolio_form.layout import create_layout as create_portfolio_form_layout
+from market_dashboard.callbacks import register_callbacks as register_market_callbacks
+from portfolio_dashboard.callbacks import register_callbacks as register_portfolio_callbacks
+from portfolio_form.callbacks import register_callbacks as register_portfolio_form_callbacks
+from services.db import get_stocks_current_price, get_tickers
+
+def create_app() -> Dash:
+    # Init Dash app with bootstrap theme
+    dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
+    app = Dash(__name__, external_stylesheets=[dbc.themes.LUX, dbc_css])
+    app.title = 'Stock Market Analytics App'
+    
+    # Define paths for the sidebar
+    paths = {
+        'Market Dashboard': '/',
+        'Portfolio Dashboard': '/portfolio-dashboard',
+        'My Portfolio': '/portfolio-form',
+        'User Guide': '/guide',
+    }
+    
+    # Create app main components
+    sidebar = cmp.create_sidebar(paths)
+    content = html.Div(
+                id='page-content', 
+                className='p-4',
+                style={
+                    'height': '100%',
+                    "overflow-y": "auto",
+                })
+    footer = cmp.create_footer()
+
+    # Define app layout
+    app.layout = html.Div([
+            dcc.Location(id='url'),
+            dcc.Store(id={'type': 'portfolio-data', 'section': 'global'}, storage_type='local'),
+            dcc.Store(id={'type': 'price-data', 'section': 'global'}, storage_type='local'),
+            dbc.Row([
+                sidebar,
+                dbc.Col(content, sm=12, md={'size': 10, 'offset': 2}, className='mb-4')
+            ], className='h-100'),
+            footer
+        ],
+        className="bg-primary text-light h-100",
+    )
+
+    # Handle page navigation through callbacks
+    @app.callback(
+        Output('page-content', 'children'),
+        Input('url', 'pathname')
+    )
+    def display_page(pathname: str) -> html.Div:
+        if pathname == '/':
+            return create_market_dashboard_layout()
+        elif pathname == '/portfolio-form':
+            return create_portfolio_form_layout()
+        elif pathname == '/portfolio-dashboard':
+            return create_portfolio_dashboard_layout()
+        elif pathname == '/guide':
+            return create_guide_layout()
+        else:
+            return html.H1('404 - Page Not Found', className='text-center text-danger fs-4 fw-bold mt-5')
+
+    # Fetch stock prices on app load
+    @app.callback(
+        Output({"type": "price-data", "section": "global"}, "data"),
+        Input("url", "pathname"),
+        prevent_initial_call=True,
+    )
+    def fetch_prices_on_load(_) -> Dict[str, float]:
+        try:
+            tickers = get_tickers()
+            if not tickers:
+                return {}
+            prices = get_stocks_current_price(tickers)
+            return prices
+        except Exception as e:
+            return {"Error during fetch_prices_on_load": str(e)}
+
+    register_market_callbacks(app)
+    register_portfolio_callbacks(app)
+    register_portfolio_form_callbacks(app)
+    return app
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run_server(debug=True)
+    
