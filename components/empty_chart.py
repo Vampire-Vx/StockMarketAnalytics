@@ -1,10 +1,10 @@
 import plotly.graph_objects as go
 from utils.fig_utils import style_fig
 
-def create_empty_chart(title: str) -> go.Figure:
+def create_empty_chart(title: str, text: str = 'No data available for selected filters') -> go.Figure:
     fig = go.Figure()
     fig.add_annotation(
-        text='No data available for selected filters',
+        text=text,
         x=0.5,
         y=0.5,
         showarrow=False,

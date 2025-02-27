@@ -20,8 +20,8 @@ def create_app() -> Dash:
     # Define paths for the sidebar
     paths = {
         'Market Dashboard': '/',
-        'Portfolio Dashboard': '/portfolio-dashboard',
         'My Portfolio': '/portfolio-form',
+        'Portfolio Dashboard': '/portfolio-dashboard',
         'User Guide': '/guide',
     }
     

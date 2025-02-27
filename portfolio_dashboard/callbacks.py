@@ -26,12 +26,13 @@ def register_callbacks(app: Dash) -> None:
     def update_dashboard(pathname, portfolio_data: str) -> list:
         # Load and prepare portfolio data
         portfolio_df = pd.read_json(StringIO(portfolio_data), orient="records")
-        portfolio_df = portfolio_df.sort_values(by="Value")
+        if not portfolio_df.empty:
+            portfolio_df = portfolio_df.sort_values(by="Value")
 
         # Handle empty portfolio
         if portfolio_df.empty:
             kpis_placeholders = ['-', '-', '-', '-']
-            empty_charts = [cmp.create_empty_chart('No Portfolio Data Available') for _ in range(2)]
+            empty_charts = [cmp.create_empty_chart(title='No Data', text="Please add stocks to your portfolio in 'My Portfolio' section.") for _ in range(2)]
             return kpis_placeholders + [
                 *empty_charts
             ]

@@ -11,6 +11,23 @@ def create_layout() -> dbc.Container:
     # Feedback Alert
     alert_feedback = cmp.create_alert(id={"type": "alert-feedback", "section": "portfolio-form"})
 
+    # Navigation Buttons
+    navigation_buttons_group = dbc.Card(
+        dbc.CardBody(
+            dbc.ButtonGroup(
+                [
+                    dbc.Button("Portfolio Dashboard", href="/portfolio-dashboard", color="success"),
+                    dbc.Button("Market Dashboard", href="/", color="info"),
+                    dbc.Button("Guide", href="/guide", color="secondary"),
+                ],
+                size="sm",
+                className="w-100",
+                style={"justify-content": "center"}
+            )
+        ),
+        class_name="mb-4 shadow-sm bg-dark text-light"
+    )
+    
     # Get ticker options
     ticker_list = get_tickers()
     ticker_options = [{"label": ticker, "value": ticker} for ticker in ticker_list]
@@ -117,12 +134,12 @@ def create_layout() -> dbc.Container:
         dbc.Row([dbc.Col(title, width=12)], class_name="my-2 text-center"),
         dbc.Row([dbc.Col(description, width=12)], class_name="mb-2 text-center"),
         html.Hr(className='mb-4'),
-
+        # Navigation Buttons
+        dbc.Row([dbc.Col(navigation_buttons_group, xl=6, lg=8, md=10, sm=12)], class_name="mb-4 justify-content-center"),
         # Portfolio Form Section
-        dbc.Row([dbc.Col(portfolio_form_group, md=12, xl=10, class_name="mx-auto mb-4")]),
-
+        dbc.Row([dbc.Col(portfolio_form_group, md=12, xl=10, class_name="mb-4 justify-content-center")]),
         # Portfolio Display Section
-        dbc.Row([dbc.Col(portfolio_table_container, md=12, xl=10, class_name="mx-auto mb-4")]),
+        dbc.Row([dbc.Col(portfolio_table_container, md=12, xl=10, class_name="mb-4 justify-content-center")]),
     ], fluid=True)
 
     return layout

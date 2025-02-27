@@ -10,6 +10,23 @@ def create_layout() -> dbc.Container:
         className="text-center opacity-75 fs-4"
     )
 
+    # Navigation Buttons
+    navigation_buttons_group = dbc.Card(
+        dbc.CardBody(
+            dbc.ButtonGroup(
+                [
+                    dbc.Button("Market Dashboard", href="/", color="success"),
+                    dbc.Button("My Portfolio", href="/portfolio-form", color="info"),
+                    dbc.Button("Portfolio Dashboard", href="/portfolio-dashboard", color="secondary"),
+                ],
+                size="sm",
+                className="w-100",
+                style={"justify-content": "center"}
+            )
+        ),
+        class_name="mb-4 shadow-sm bg-dark text-light"
+    )
+
     # Glossary Card
     glossary_card = dbc.Card(
         dbc.CardBody([
@@ -45,7 +62,7 @@ def create_layout() -> dbc.Container:
     data_source_card = dbc.Card(
         dbc.CardBody([
             html.H4("Data Source Information", className="card-title"),
-            html.P("Data is fetched from Yahoo Finance using the yfinance API, stored in an SQLite database, and updated automatically every day at 00:00 UTC. ")
+            html.P("Data is fetched from Yahoo Finance using the yfinance API and stored in an SQLite database. Data is updated daily."),
         ]),
         className="mb-4 shadow-sm bg-dark text-light"
     )
@@ -60,12 +77,12 @@ def create_layout() -> dbc.Container:
                     " Explore general stock market insights through various charts and filters."
                 ]),
                 html.Li([
-                    html.Strong("Edit Portfolio:"), 
+                    html.Strong("My Portfolio:"), 
                     " Create or modify your custom portfolio by adding, editing, or deleting stocks."
                 ]),
                 html.Li([
-                    html.Strong("My Portfolio:"), 
-                    " View key performance indicators (KPIs) and detailed insights about your portfolio."
+                    html.Strong("Portfolio Dashboard:"), 
+                    " View key performance indicators (KPIs) and data insights about your portfolio"
                 ]),
             ]),
             html.P("Use the sidebar navigation to switch between these sections.")
@@ -77,6 +94,11 @@ def create_layout() -> dbc.Container:
     layout = dbc.Container([
         dbc.Row(dbc.Col(header, width=12), className="mt-4 mb-2"),
         dbc.Row(dbc.Col(description, width=12), className="mb-4"),
+        html.Hr(className="mb-4"),
+        dbc.Row(
+            dbc.Col(navigation_buttons_group, xl=6, lg=8, md=10, sm=12),
+            className="mb-4 justify-content-center"
+        ),
         dbc.Row(
             dbc.Col(glossary_card, md=12, lg=10, xl=8),
             className="mb-4 justify-content-center"

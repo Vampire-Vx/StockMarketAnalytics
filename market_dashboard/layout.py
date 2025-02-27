@@ -58,6 +58,22 @@ def create_layout() -> dbc.Container:
         class_name="mb-4 shadow-sm bg-dark text-light"
     )
 
+    navigation_buttons_group = dbc.Card(
+        dbc.CardBody(
+            dbc.ButtonGroup(
+                [
+                    dbc.Button("My Portfolio", href="/portfolio-form", color="success"),
+                    dbc.Button("Portfolio Dashboard", href="/portfolio-dashboard", color="info"),
+                    dbc.Button("Guide", href="/guide", color="secondary"),
+                ],
+                size="sm",
+                className="w-100",
+                style={"justify-content": "center"}
+            )
+        ),
+        class_name="mb-4 shadow-sm bg-dark text-light"
+    )
+
     price_over_time_chart = cmp.create_chart_container(
         content_id={'type': 'dynamic-output-line', 'section': 'market'},
         bg_color='dark',
@@ -111,12 +127,11 @@ def create_layout() -> dbc.Container:
         dbc.Row([dbc.Col(description, width=12)], class_name='mb-2 text-center'),
         html.Hr(className='mb-4'),
 
-        # General Filters section
+        # Top section
         dbc.Row([
-            dbc.Col(general_filters_group, md=12, lg=10, xl=8) 
-            ],
-            class_name='mb-4'
-        ),
+            dbc.Col(general_filters_group, md=12, lg=10, xl=8),
+            dbc.Col(navigation_buttons_group, md=12, lg=10, xl=4)
+        ], class_name='mb-4 justify-content-center'),
 
         # Charts section
         dbc.Row([
