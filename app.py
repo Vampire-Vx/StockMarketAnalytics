@@ -16,7 +16,7 @@ def create_app() -> Dash:
     dbc_css = "https://cdn.jsdelivr.net/gh/AnnMarieW/dash-bootstrap-templates/dbc.min.css"
     app = Dash(__name__, external_stylesheets=[dbc.themes.LUX, dbc_css])
     app.title = 'Stock Market Analytics App'
-    
+
     # Define paths for the sidebar
     paths = {
         'Market Dashboard': '/',
@@ -88,7 +88,10 @@ def create_app() -> Dash:
     register_portfolio_form_callbacks(app)
     return app
 
+# Init app and server
+app = create_app()
+server = app.server
+
+# Run app
 if __name__ == '__main__':
-    app = create_app()
     app.run_server(debug=True)
-    
