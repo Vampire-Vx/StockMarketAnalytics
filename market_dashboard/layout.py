@@ -121,7 +121,7 @@ def create_layout() -> dbc.Container:
     layout = dbc.Container([
         # Hidden store for time period
         dcc.Store(id={'type': 'time-period-store', 'section': 'market'}, data='1 month'),
-
+        dcc.Store(id={'type': 'test', 'section': 'market'}, data='data'),
         # Header
         dbc.Row([dbc.Col(title, width=12)], class_name='mt-2 mb-2 text-center'),
         dbc.Row([dbc.Col(description, width=12)], class_name='mb-2 text-center'),

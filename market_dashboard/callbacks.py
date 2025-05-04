@@ -34,6 +34,7 @@ def register_callbacks(app: Dash) -> None:
         ]
     )
     def update_stock_charts(ticker: str, period: str) -> Tuple[go.Figure, go.Figure]:
+        print("hi")
         df = db.get_price_data(ticker, period=period)
         time_period_text = f'Last {period.capitalize()}' if period != 'max' else 'All Time'
         line_chart_title = f'{ticker} Closing Price - {time_period_text}'
@@ -72,6 +73,16 @@ def register_callbacks(app: Dash) -> None:
             fig.update_layout(yaxis=dict(title='Transactions'))
             return fig
         return cmp.create_empty_chart(chart_title)
+    
+    @app.callback(
+        Output({'type': 'test', 'section': 'market'}, 'data'),
+        [
+            Input({'type': 'dynamic-output-candlestick', 'section': 'market'}, 'relayoutData'),
+        ]
+    )
+    def update_heatmap(testtest) -> str:
+        print("hi")
+        return "test"
     
     @app.callback(
         Output({'type': 'dynamic-output-heatmap', 'section': 'market'}, 'figure'),
